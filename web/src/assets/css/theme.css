@@ -1,0 +1,41 @@
+:root {
+    /* 主色调 - 蓝色系 */
+    --el-color-primary: #2177b8;
+    --el-color-primary-light-3: #4d94c7;
+    --el-color-primary-light-5: #79b1d6;
+    --el-color-primary-light-7: #a5cde5;
+    --el-color-primary-light-8: #bddcec;
+    --el-color-primary-light-9: #d6ebf3;
+
+    /* 成功色 */
+    --el-color-success: #67C23A;
+    --el-color-success-light-3: #95D475;
+    --el-color-success-light-5: #B3E19D;
+    --el-color-success-light-7: #D1EDC4;
+    --el-color-success-light-8: #E1F3D8;
+    --el-color-success-light-9: #F0F9EB;
+
+    /* 信息色 */
+    --el-color-info: #909399;
+    --el-color-info-light-3: #B1B3B8;
+    --el-color-info-light-5: #C8C9CC;
+    --el-color-info-light-7: #DEDFE0;
+    --el-color-info-light-8: #E9E9EB;
+    --el-color-info-light-9: #F4F4F5;
+
+    /* 警告色 */
+    --el-color-warning: #E6A23C;
+    --el-color-warning-light-3: #EEBE77;
+    --el-color-warning-light-5: #F3D19E;
+    --el-color-warning-light-7: #F8E3C5;
+    --el-color-warning-light-8: #FAECD8;
+    --el-color-warning-light-9: #FDF6EC;
+
+    /* 危险色 */
+    --el-color-danger: #F56C6C;
+    --el-color-danger-light-3: #F89898;
+    --el-color-danger-light-5: #FAB6B6;
+    --el-color-danger-light-7: #FCD3D3;
+    --el-color-danger-light-8: #FDE2E2;
+    --el-color-danger-light-9: #FEF0F0;
+}

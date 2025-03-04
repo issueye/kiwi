@@ -1,0 +1,7 @@
+root/*
+bin/*
+*.dll
+
+web/assets/*
+
+vendor

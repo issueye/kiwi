@@ -1,0 +1,8 @@
+root/*
+bin/*
+*.dll
+*.log
+
+web/assets/*
+web/node_modules/*
+server/vendor/*

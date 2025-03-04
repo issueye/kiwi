@@ -1,0 +1,148 @@
+html,
+body {
+    height: 100%;
+}
+
+.el-tooltip__trigger:focus-visible {
+    outline: unset;
+}
+
+/*或者是下面这个*/
+
+.el-tooltip__trigger:first-child:focus-visible {
+    outline: unset;
+}
+
+.el-dropdown {
+    vertical-align: middle;
+}
+
+:root {
+    --el-border-radius-base: 2px;
+    --el-dialog-padding-primary: 0;
+    --el-menu-base-level-padding: 18px;
+    --el-menu-item-height: 44px;
+    --el-menu-sub-item-height: 44px;
+    --el-base-padding: 8px;
+    --el-base-margin: 8px;
+    --el-dialog-title-font-size: 16px;
+    --el-dialog-title-font-weight: 600;
+    --el-body-padding: 24px;
+    --el-body-half-padding: 12px;
+    --el-menu-horizontal-height: 44px;
+
+    /* 主题颜色 */
+    --el-color-primary: #2177b8;
+    --el-color-primary-light-3: #4d94c7;
+    --el-color-primary-light-5: #79b1d6;
+    --el-color-primary-light-7: #a5cde5;
+    --el-color-primary-light-8: #bddcec;
+    --el-color-primary-light-9: #d6ebf3;
+
+    --el-color-success: #67C23A;
+    --el-color-success-light-3: #95D475;
+    --el-color-success-light-5: #B3E19D;
+    --el-color-success-light-7: #D1EDC4;
+    --el-color-success-light-8: #E1F3D8;
+    --el-color-success-light-9: #F0F9EB;
+
+    --el-color-info: #909399;
+    --el-color-info-light-3: #B1B3B8;
+    --el-color-info-light-5: #C8C9CC;
+    --el-color-info-light-7: #DEDFE0;
+    --el-color-info-light-8: #E9E9EB;
+    --el-color-info-light-9: #F4F4F5;
+
+    --el-color-warning: #E6A23C;
+    --el-color-warning-light-3: #EEBE77;
+    --el-color-warning-light-5: #F3D19E;
+    --el-color-warning-light-7: #F8E3C5;
+    --el-color-warning-light-8: #FAECD8;
+    --el-color-warning-light-9: #FDF6EC;
+
+    --el-color-danger: #F56C6C;
+    --el-color-danger-light-3: #F89898;
+    --el-color-danger-light-5: #FAB6B6;
+    --el-color-danger-light-7: #FCD3D3;
+    --el-color-danger-light-8: #FDE2E2;
+    --el-color-danger-light-9: #FEF0F0;
+}
+
+.el-notification {
+    border-radius: var(--el-border-radius-base);
+    /* 调整为你需要的圆角值 */
+}
+
+/* 弹窗 */
+.el-dialog {
+    padding: 0px;
+}
+
+.el-dialog__title {
+    font-size: var(--el-dialog-title-font-size);
+    font-weight: var(--el-dialog-title-font-weight);
+    color: var(--el-color-primary);
+    margin-left: var(--el-base-margin);
+}
+
+.el-dialog__header {
+    border-bottom: 1px solid #d9d9d9;
+    padding: var(--el-base-padding);
+}
+
+.el-dialog__body {
+    padding: var(--el-body-padding) var(--el-body-padding) var(--el-body-half-padding) var(--el-body-padding);
+}
+
+.el-dialog__footer {
+    padding-top: 0px;
+}
+
+.dialog-footer {
+    border-top: 1px solid #d9d9d9;
+    padding: var(--el-base-padding);
+
+}
+
+.el-message-box {
+    border-radius: var(--el-border-radius-base);
+}
+
+.el-drawer__header {
+    padding: var(--el-base-padding);
+    margin-bottom: 0px;
+}
+
+.el-drawer__body .actions {
+    padding: 0 var(--el-base-padding);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.el-drawer__body .body {
+    padding: var(--el-body-padding) var(--el-body-padding) var(--el-body-half-padding) var(--el-body-padding);
+    border-top: 1px solid #d9d9d9;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+/* 菜单 */
+/* .el-menu-item.is-active {
+    background-color: var(--el-color-primary-light-7);
+} */
+
+.el-menu--horizontal.el-menu {
+    border-bottom: none;
+}
+
+/* switch */
+.el-switch__core {
+    border-radius: var(--el-border-radius-base) !important;
+}
+
+.el-switch__action {
+    border-radius: var(--el-border-radius-base) !important;
+}
+
+.el-tag {
+    border-radius: var(--el-border-radius-base);
+}
