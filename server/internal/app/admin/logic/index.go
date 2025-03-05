@@ -178,34 +178,3 @@ func URIsNotExistAdd(ur *model.UserRole) {
 		}
 	}
 }
-
-func InitRoleMenus() {
-	rms := []*model.RoleMenu{
-		{RoleCode: "9001", MenuCode: "9000"},
-		{RoleCode: "9001", MenuCode: "9001"},
-		{RoleCode: "9001", MenuCode: "9002"},
-		{RoleCode: "9001", MenuCode: "9003"},
-		{RoleCode: "9001", MenuCode: "9004"},
-	}
-
-	for _, rm := range rms {
-		RMIsNotExistAdd(rm)
-	}
-}
-
-func RMIsNotExistAdd(rm *model.RoleMenu) {
-	RoleSrv := service.NewUser()
-	isHave, err := RoleSrv.CheckRoleMenu(rm.RoleCode, rm.MenuCode)
-	if err != nil {
-		slog.Error("查询角色菜单失败", slog.String("失败原因", err.Error()))
-		return
-	}
-
-	if !isHave {
-		err = RoleSrv.AddRoleMenu(rm)
-		if err != nil {
-			slog.Error("添加角色菜单失败", slog.String("失败原因", err.Error()))
-			return
-		}
-	}
-}

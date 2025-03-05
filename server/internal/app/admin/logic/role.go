@@ -6,7 +6,6 @@ import (
 	"kiwi/internal/app/admin/requests"
 	"kiwi/internal/app/admin/service"
 	commonModel "kiwi/internal/common/model"
-	"log/slog"
 )
 
 // 创建数据
@@ -55,31 +54,4 @@ func ListRole(condition *commonModel.PageQuery[*requests.QueryRole]) (*commonMod
 // 删除数据
 func DeleteRole(id uint) error {
 	return service.NewRole().Delete(id)
-}
-
-func InitRoles() {
-	Roles := []*model.Role{
-		model.NewRole("9001", "管理员"),
-	}
-
-	for _, Role := range Roles {
-		RoleIsNotExistAdd(Role)
-	}
-}
-
-func RoleIsNotExistAdd(Role *model.Role) {
-	RoleSrv := service.NewUser()
-	info, err := RoleSrv.GetRoleByName(Role.Name)
-	if err != nil {
-		slog.Error("查询角色失败，失败原因", err.Error())
-		return
-	}
-
-	if info.ID == 0 {
-		err = RoleSrv.AddRole(Role)
-		if err != nil {
-			slog.Error("添加角色失败，失败原因", err.Error())
-			return
-		}
-	}
 }

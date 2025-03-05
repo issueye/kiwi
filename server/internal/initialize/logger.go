@@ -3,6 +3,8 @@ package initialize
 import (
 	"fmt"
 	"kiwi/internal/common/config"
+	"kiwi/internal/global"
+	"path/filepath"
 
 	"log/slog"
 
@@ -18,6 +20,7 @@ var LevelMap = map[int]slog.Level{
 
 func InitLogger() {
 	path := config.GetParam(config.LOG, "path", "logs").String()
+	path = filepath.Join(global.ROOT_PATH, path)
 	lWriter := &lumberjack.Logger{
 		Filename:   fmt.Sprintf("%s.log", path),
 		MaxSize:    config.GetParam(config.LOG, "max-size", 100).Int(),

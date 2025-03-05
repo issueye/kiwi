@@ -33,9 +33,10 @@ func (data *KVs) Value() (driver.Value, error) {
 }
 
 type BaseModel struct {
-	ID        uint      `gorm:"column:id;primaryKey;not null" json:"id"`
-	CreatedAt time.Time `gorm:"column:created_at;" json:"created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at;" json:"updated_at"`
+	ID        uint      `gorm:"column:id;primaryKey;not null" json:"id"`         // ID
+	CreatedAt time.Time `gorm:"column:created_at;" json:"created_at"`            // 创建时间
+	UpdatedAt time.Time `gorm:"column:updated_at;" json:"updated_at"`            // 更新时间
+	Remark    string    `gorm:"column:remark;size:200;comment:备注" json:"remark"` // 备注
 }
 
 type BasePage struct {

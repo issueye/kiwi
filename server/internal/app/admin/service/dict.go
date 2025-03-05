@@ -58,3 +58,35 @@ func (r *DictDetail) List(condition *commonModel.PageQuery[*requests.QueryDictsD
 		return d
 	})
 }
+
+func (r *Dicts) NotExistCreate(data *model.DictsInfo) error {
+	// 检查字典是否存在
+	var count int64
+	err := r.GetDB().Model(&model.DictsInfo{}).Where("code = ?", data.Code).Count(&count).Error
+	if err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return r.GetDB().Create(data).Error
+	}
+
+	if count > 0 {
+		for _, detail := range data.Details {
+			// 检查字典明细是否存在
+			err = r.GetDB().Model(&model.DictDetail{}).Where("dict_code =?", data.Code).Where("key = ?", detail.Key).Count(&count).Error
+			if err != nil {
+				return err
+			}
+
+			if count == 0 {
+				err = r.GetDB().Create(&detail).Error
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
+}

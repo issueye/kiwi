@@ -15,6 +15,7 @@ import DictMana from '~/pages/system/dict_mana/index.vue';
 import Setting from '~/pages/system/setting/index.vue';
 
 import ProjectMana from '~/pages/project/mana/index.vue';
+import RobotMana from '~/pages/project/robot_mana/index.vue';
 
 
 // 默认路由，所有用户共享
@@ -31,6 +32,7 @@ const asyncRoutes = [
 
     // 代理管理
     { path: "/project/index", name: "project_mana", component: ProjectMana, meta: { title: "项目管理" } },
+    { path: "/project/robot", name: "robot_mana", component: RobotMana, meta: { title: "机器人管理" } },
 
     // 系统管理
     { path: "/system/user", name: "user", component: User, meta: { title: "用户管理" } },

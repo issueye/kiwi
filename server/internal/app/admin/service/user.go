@@ -5,7 +5,6 @@ import (
 	"kiwi/internal/app/admin/requests"
 	commonModel "kiwi/internal/common/model"
 	"kiwi/internal/common/service"
-	"kiwi/internal/global"
 
 	"gorm.io/gorm"
 )
@@ -21,14 +20,14 @@ func NewUser(args ...any) *User {
 }
 
 // 根据用户名查询用户
-func (u *User) GetUserByName(name string) (*model.User, error) {
+func (srv *User) GetUserByName(name string) (*model.User, error) {
 	user := &model.User{}
-	err := global.DB.Model(&model.User{}).Where("username = ?", name).Preload("UserRole").Find(user).Error
+	err := srv.GetDB().Model(&model.User{}).Where("username = ?", name).Preload("UserRole").Find(user).Error
 	return user, err
 }
 
 // 根据条件查询列表
-func (u *User) ListUser(condition *commonModel.PageQuery[*requests.QueryUser]) (*commonModel.ResPage[model.User], error) {
+func (srv *User) ListUser(condition *commonModel.PageQuery[*requests.QueryUser]) (*commonModel.ResPage[model.User], error) {
 	return service.GetList[model.User](condition, func(qu *requests.QueryUser, d *gorm.DB) *gorm.DB {
 		d = d.Preload("UserRole")
 
@@ -41,70 +40,70 @@ func (u *User) ListUser(condition *commonModel.PageQuery[*requests.QueryUser]) (
 }
 
 // 添加用户
-func (u *User) AddUser(user *model.User) error {
-	return global.DB.Model(&model.User{}).Create(user).Error
+func (srv *User) AddUser(user *model.User) error {
+	return srv.GetDB().Model(&model.User{}).Create(user).Error
 }
 
 // 更新用户
-func (u *User) UpdateUser(user *model.User) error {
-	return global.DB.Model(&model.User{}).Where("id = ?", user.ID).Updates(user).Error
+func (srv *User) UpdateUser(user *model.User) error {
+	return srv.GetDB().Model(&model.User{}).Where("id = ?", user.ID).Updates(user).Error
 }
 
 // 更新用户
-func (u *User) UpdateUserByData(id uint, data map[string]any) error {
-	return global.DB.Model(&model.User{}).Where("id = ?", id).Updates(data).Error
+func (srv *User) UpdateUserByData(id uint, data map[string]any) error {
+	return srv.GetDB().Model(&model.User{}).Where("id = ?", id).Updates(data).Error
 }
 
 // 删除用户
-func (u *User) DeleteUser(id int) error {
-	return global.DB.Model(&model.User{}).Where("id = ?", id).Delete(&model.User{}).Error
+func (srv *User) DeleteUser(id int) error {
+	return srv.GetDB().Model(&model.User{}).Where("id = ?", id).Delete(&model.User{}).Error
 }
 
 // 根据用户id查询用户
-func (u *User) GetUserById(id int) (*model.User, error) {
+func (srv *User) GetUserById(id int) (*model.User, error) {
 	user := &model.User{}
-	err := global.DB.Model(&model.User{}).Where("id = ?", id).First(user).Error
+	err := srv.GetDB().Model(&model.User{}).Where("id = ?", id).First(user).Error
 	return user, err
 }
 
 // 根据用户id查询用户角色
-func (u *User) GetUserRoleById(id int) (*model.Role, error) {
+func (srv *User) GetUserRoleById(id int) (*model.Role, error) {
 	role := new(model.Role)
-	err := global.DB.Model(&model.Role{}).Joins("JOIN user_role ON user_role.Role_code = role.code").Where("user_role.user_id = ?", id).Find(role).Error
+	err := srv.GetDB().Model(&model.Role{}).Joins("JOIN user_role ON user_role.Role_code = role.code").Where("user_role.user_id = ?", id).Find(role).Error
 	return role, err
 }
 
-func (u *User) GetRoleByName(name string) (*model.Role, error) {
+func (srv *User) GetRoleByName(name string) (*model.Role, error) {
 	role := new(model.Role)
-	err := global.DB.Model(&model.Role{}).Where("name = ?", name).Find(role).Error
+	err := srv.GetDB().Model(&model.Role{}).Where("name = ?", name).Find(role).Error
 	return role, err
 }
 
 // AddRole
-func (u *User) AddRole(role *model.Role) error {
-	return global.DB.Model(&model.Role{}).Create(role).Error
+func (srv *User) AddRole(role *model.Role) error {
+	return srv.GetDB().Model(&model.Role{}).Create(role).Error
 }
 
 // 查询角色菜单
 
-func (u *User) CheckRoleMenu(code string, menu_code string) (bool, error) {
+func (srv *User) CheckRoleMenu(code string, menu_code string) (bool, error) {
 	count := int64(0)
-	err := global.DB.Model(&model.RoleMenu{}).Where("role_code = ?", code).Where("menu_code = ?", menu_code).Count(&count).Error
+	err := srv.GetDB().Model(&model.RoleMenu{}).Where("role_code = ?", code).Where("menu_code = ?", menu_code).Count(&count).Error
 	return count > 0, err
 }
 
-func (u *User) CheckUserRole(user_id int, role_code string) (bool, error) {
+func (srv *User) CheckUserRole(user_id int, role_code string) (bool, error) {
 	count := int64(0)
-	err := global.DB.Model(&model.UserRole{}).Where("user_id = ?", user_id).Where("role_code = ?", role_code).Count(&count).Error
+	err := srv.GetDB().Model(&model.UserRole{}).Where("user_id = ?", user_id).Where("role_code = ?", role_code).Count(&count).Error
 	return count > 0, err
 }
 
 // AddUserRole
-func (u *User) AddUserRole(userRole *model.UserRole) error {
-	return global.DB.Model(&model.UserRole{}).Create(userRole).Error
+func (srv *User) AddUserRole(userRole *model.UserRole) error {
+	return srv.GetDB().Model(&model.UserRole{}).Create(userRole).Error
 }
 
 // AddRoleMenu
-func (u *User) AddRoleMenu(roleMenu *model.RoleMenu) error {
-	return global.DB.Model(&model.RoleMenu{}).Create(roleMenu).Error
+func (srv *User) AddRoleMenu(roleMenu *model.RoleMenu) error {
+	return srv.GetDB().Model(&model.RoleMenu{}).Create(roleMenu).Error
 }

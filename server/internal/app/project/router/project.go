@@ -11,6 +11,13 @@ func Register(r *gin.RouterGroup) {
 }
 
 func InitProjectRouter(r *gin.RouterGroup) {
+
+	webhook := r.Group("webhook")
+	{
+		webhook.POST("gitlab", func(ctx *gin.Context) {
+		})
+	}
+
 	project := r.Group("project")
 	// project.Use(middleware.AuthMiddleware())
 	{
@@ -48,6 +55,15 @@ func InitProjectRouter(r *gin.RouterGroup) {
 			version.PUT("build", v1.UpdateVersionBuildStatus)
 			version.DELETE(":id", v1.DeleteVersion)
 			version.POST("list", v1.VersionList)
+		}
+
+		robot := project.Group("robot")
+		{
+			robot.POST("", v1.CreateRobot)
+			robot.PUT("", v1.UpdateRobot)
+			robot.PUT("state", v1.UpdateRobotState)
+			robot.DELETE(":id", v1.DeleteRobot)
+			robot.POST("list", v1.RobotList)
 		}
 	}
 }

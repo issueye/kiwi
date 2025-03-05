@@ -2,10 +2,10 @@
   <base-page title="项目管理" desc="项目管理" padding="0px">
     <template #content>
       <div class="flex" style="height: calc(100% - 40px);">
-        <div class="h-full p-5" style="width: 600px; border-right: 1px solid #d9d9d9;">
+        <div class="h-full p-5" style="width: 800px; border-right: 1px solid #d9d9d9;">
           <Left />
         </div>
-        <div class="h-full p-5" style="width: calc(100% - 680px);">
+        <div class="h-full p-5" style="width: calc(100% - 880px);">
           <Right />
         </div>
       </div>
