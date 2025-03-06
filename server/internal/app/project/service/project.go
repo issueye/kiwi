@@ -29,11 +29,36 @@ func (r *Project) ListProject(condition *commonModel.PageQuery[*requests.QueryPr
 
 		// 加载分支
 		d = d.Preload("Branchs")
-		// 加载版本
-		d = d.Preload("Versions")
-		// 加载标签
-		d = d.Preload("Tags")
+
+		// 加载机器人
+		d = d.Preload("ProjectRobots")
 
 		return d
 	})
+}
+
+func (r *Project) SaveProjectRobots(projectId uint, robots []uint) error {
+	// 先删除
+	err := r.GetDB().Where("project_id =?", projectId).Delete(&model.ProjectRobotInfo{}).Error
+	if err != nil {
+		return err
+	}
+
+	// 再添加
+	for _, robotId := range robots {
+		info := &model.ProjectRobotInfo{}
+		info.ProjectId = projectId
+		info.RobotId = robotId
+
+		err = r.GetDB().Create(info).Error
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (r *Project) DeleteProjectRobots(projectId uint) error {
+	return r.GetDB().Where("project_id = ?", projectId).Delete(&model.ProjectRobotInfo{}).Error
 }

@@ -33,7 +33,7 @@ func (r *Robot) ListRobot(condition *commonModel.PageQuery[*requests.QueryRobot]
 
 // UpdateRobotStatus 更新分支状态
 func (r *Robot) UpdateRobotState(id uint, state int) error {
-	return r.DB.Model(&model.RobotInfo{}).
+	return r.GetDB().Model(&model.RobotInfo{}).
 		Where("id = ?", id).
 		Update("state", state).Error
 }

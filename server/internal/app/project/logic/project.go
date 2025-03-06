@@ -9,11 +9,54 @@ import (
 
 func CreateProject(req *requests.CreateProject) error {
 	srv := service.NewProject()
-	return srv.Create(&req.ProjectInfo)
+	srv.Begin()
+	var err error
+	defer func() {
+		if err != nil {
+			srv.Rollback()
+			return
+		}
+
+		srv.Commit()
+	}()
+
+	err = srv.Create(&req.ProjectInfo)
+	if err != nil {
+		return err
+	}
+
+	err = srv.SaveProjectRobots(req.ID, req.Robots)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func UpdateProject(req *requests.UpdateProject) error {
-	return service.NewProject().Update(req.ID, &req.ProjectInfo)
+	srv := service.NewProject()
+	srv.Begin()
+	var err error
+	defer func() {
+		if err != nil {
+			srv.Rollback()
+			return
+		}
+
+		srv.Commit()
+	}()
+
+	srv.Update(req.ID, &req.ProjectInfo)
+	if err != nil {
+		return err
+	}
+
+	err = srv.SaveProjectRobots(req.ID, req.Robots)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func DeleteProject(id uint) error {
@@ -47,14 +90,7 @@ func DeleteProject(id uint) error {
 		return err
 	}
 
-	tagSrv := service.NewTag(srv.GetDB(), true)
-	err = tagSrv.DeleteByFields(map[string]any{"project_id": info.ID})
-	if err != nil {
-		return err
-	}
-
-	versionSrv := service.NewVersion(srv.GetDB(), true)
-	err = versionSrv.DeleteByFields(map[string]any{"project_id": info.ID})
+	err = srv.DeleteProjectRobots(info.ID)
 	if err != nil {
 		return err
 	}

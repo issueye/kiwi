@@ -37,26 +37,6 @@ func InitProjectRouter(r *gin.RouterGroup) {
 			branch.POST("list", v1.BranchList)
 		}
 
-		// Tag routes
-		tag := project.Group("tag")
-		{
-			tag.POST("", v1.CreateTag)
-			tag.PUT("", v1.UpdateTag)
-			tag.PUT("release", v1.UpdateTagReleaseStatus)
-			tag.DELETE(":id", v1.DeleteTag)
-			tag.POST("list", v1.TagList)
-		}
-
-		// Version routes
-		version := project.Group("version")
-		{
-			version.POST("", v1.CreateVersion)
-			version.PUT("", v1.UpdateVersion)
-			version.PUT("build", v1.UpdateVersionBuildStatus)
-			version.DELETE(":id", v1.DeleteVersion)
-			version.POST("list", v1.VersionList)
-		}
-
 		robot := project.Group("robot")
 		{
 			robot.POST("", v1.CreateRobot)

@@ -22,26 +22,27 @@
         <el-input v-model="formData.repo_url" placeholder="请输入仓库地址" />
       </el-form-item>
 
-      <el-form-item label="代理地址">
-        <el-input v-model="formData.proxy_url" placeholder="请输入代理地址" />
-      </el-form-item>
-
-      <el-form-item label="用户名称">
-        <el-input v-model="formData.repo_user" placeholder="请输入用户名称" />
-      </el-form-item>
-
-      <el-form-item label="用户密码">
-        <el-input
-          v-model="formData.repo_password"
-          placeholder="请输入用户密码"
-        />
+      <el-form-item label="机器人">
+        <el-select
+          v-model="formData.robots"
+          multiple
+          collapse-tags
+          placeholder="请选择机器人"
+        >
+          <el-option
+            v-for="(item, index) in robotOptions"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
 
       <el-form-item label="备注">
         <el-input
           v-model="formData.description"
           type="textarea"
-          :rows="2"
+          :rows="3"
           placeholder="请输入备注"
         />
       </el-form-item>
@@ -58,6 +59,7 @@
 
 <script setup>
 import { apiAddData, apiUpdateData } from "~/api/project";
+import { apiGetList } from "~/api/project/robot";
 import { reactive, ref, toRefs, computed } from "vue";
 
 const props = defineProps({
@@ -79,10 +81,8 @@ const props = defineProps({
         id: 0, // ID
         name: "", // 名称
         repo_url: "", // 仓库地址
-        proxy_url:"", // 代理地址
-        repo_user: "", // 仓库用户
-        repo_password: "", // 用户密码
         description: "", // 备注
+        robots: [], // 机器人
       };
     },
   },
@@ -98,6 +98,8 @@ const dialog = reactive({
   loading: false,
 });
 
+const robotOptions = ref([]);
+
 /**
  * 表单验证规则
  */
@@ -109,15 +111,29 @@ const computedRules = computed(() => {
   return rules;
 });
 
+const getRobotList = async () => {
+  try {
+    const res = await apiGetList();
+    robotOptions.value = res.list.map((item) => {
+      return {
+        label: item.name,
+        value: item.id,
+      };
+    });
+  } catch (error) {
+    return [];
+  }
+};
+
 /**
  * 关闭弹窗
  */
 const handleClose = () => {
-  emits("update:visible", false);
   emits("close");
 };
 
 const handleOpen = () => {
+  getRobotList();
   switch (operationType.value) {
     case 0:
       dialog.title = "新增项目信息";
@@ -143,7 +159,7 @@ const handleSubmitClick = () => {
           await editData();
           break;
       }
-      emits("update:visible", false);
+      emits("close");
     }
   });
 };
@@ -156,7 +172,7 @@ const addData = async () => {
     dialog.loading = true;
     await apiAddData(formData.value);
     dialog.loading = false;
-    toast("新增代码生成配置成功");
+    toast("新增成功");
   } catch (error) {}
 };
 
@@ -168,7 +184,7 @@ const editData = async () => {
     dialog.loading = true;
     await apiUpdateData(formData.value);
     dialog.loading = false;
-    toast("修改代码生成配置成功");
+    toast("修改成功");
   } catch (error) {}
 };
 </script>
