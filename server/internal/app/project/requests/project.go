@@ -8,21 +8,25 @@ import (
 
 type CreateProject struct {
 	model.ProjectInfo
+	Robots []uint `json:"robots" form:"robots"` // 机器人ID列表
 }
 
 func NewCreateProject() *CreateProject {
 	return &CreateProject{
 		ProjectInfo: model.ProjectInfo{},
+		Robots:      []uint{},
 	}
 }
 
 type UpdateProject struct {
 	model.ProjectInfo
+	Robots []uint `json:"robots" form:"robots"` // 机器人ID列表
 }
 
 func NewUpdateProject() *UpdateProject {
 	return &UpdateProject{
 		ProjectInfo: model.ProjectInfo{},
+		Robots:      []uint{},
 	}
 }
 

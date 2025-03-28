@@ -38,7 +38,7 @@ func (r *Branch) UpdateBranchStatus(id uint, status string) error {
 		return errors.New("无效的分支状态")
 	}
 
-	return r.DB.Model(&model.BranchInfo{}).
+	return r.GetDB().Model(&model.BranchInfo{}).
 		Where("id = ?", id).
 		Update("status", status).Error
 }
