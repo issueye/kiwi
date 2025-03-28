@@ -32,7 +32,7 @@ func (srv *Role) ListRole(condition *commonModel.PageQuery[*requests.QueryRole])
 	})
 }
 
-func (srv *Role) GetRoleMenus(Role_code string) ([]*model.Menu, error) {
+func (srv *Role) GetRoleMenus(Role_code string, args ...any) ([]*model.Menu, error) {
 	menu := make([]*model.Menu, 0)
 
 	rm := srv.GetDB().Model(&model.RoleMenu{})
@@ -43,6 +43,11 @@ func (srv *Role) GetRoleMenus(Role_code string) ([]*model.Menu, error) {
 	sqlStr := rm.ToSQL(func(tx *gorm.DB) *gorm.DB { return tx.Find(nil) })
 	qry := srv.GetDB().Model(&model.Menu{}).Joins(fmt.Sprintf(`left join (%s) rm on rm.menu_code = sys_menu.code`, sqlStr)).
 		Select("sys_menu.*,case when rm.role_code is not null then 1 else 0 end as is_have")
+
+	if len(args) > 0 {
+		isHave := args[0].(int)
+		qry = qry.Where("is_have = ?", isHave)
+	}
 
 	err := qry.Find(&menu).Error
 	return menu, err

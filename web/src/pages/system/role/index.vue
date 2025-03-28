@@ -1,86 +1,41 @@
 <template>
   <base-page title="角色管理" desc="角色管理">
+    <template #actions>
+      <el-button type="success" icon="plus" @click="handleAddClick">新增</el-button>
+    </template>
     <template #content>
       <div class="h-full flex flex-col p-2">
         <div class="search-bar">
           <el-form ref="queryFormRef" :model="queryParams" :inline="true">
             <el-form-item label="关键字" prop="keywords">
-              <el-input
-                v-model="queryParams.keywords"
-                placeholder="名称/编码"
-                clearable
-                @keyup.enter="handleQuery"
-              />
+              <el-input v-model="queryParams.keywords" placeholder="名称/编码" clearable @keyup.enter="handleQuery" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" icon="search" @click="handleQuery"
-                >搜索</el-button
-              >
-              <el-button icon="refresh" @click="handleResetQuery"
-                >重置</el-button
-              >
+              <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
+              <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
             </el-form-item>
           </el-form>
         </div>
 
         <div class="grow flex flex-col">
-          <div class="mb-[10px]">
-            <el-button type="success" icon="plus" @click="handleAddClick"
-              >新增</el-button
-            >
-          </div>
-
           <div class="grow">
-            <d-table
-              :columns="columns"
-              :table-data="tableData"
-              :page-config="pageConfig"
-              usePagination
-              highlight-current-row
-              stripe
-              :loading="loading"
-              empty-text="暂无数据"
-            >
+            <d-table :columns="columns" :table-data="tableData" :page-config="pageConfig" usePagination
+              highlight-current-row stripe :loading="loading" empty-text="暂无数据">
               <template #operation="{ scope }">
-                <el-button
-                  type="primary"
-                  link
-                  @click="handleAuthClick(scope.row)"
-                  >权限</el-button
-                >
+                <el-button type="primary" link @click="handleAuthClick(scope.row)">权限</el-button>
                 <el-divider direction="vertical" />
-                <el-button
-                  type="primary"
-                  link
-                  @click="handleEditClick(scope.row)"
-                  >编辑</el-button
-                >
+                <el-button type="primary" link @click="handleEditClick(scope.row)">编辑</el-button>
                 <el-divider direction="vertical" />
-                <el-button
-                  type="danger"
-                  link
-                  @click="handleDeleteClick(scope.row)"
-                  >删除</el-button
-                >
+                <el-button type="danger" link @click="handleDeleteClick(scope.row)">删除</el-button>
               </template>
             </d-table>
           </div>
         </div>
 
         <!--弹窗-->
-        <el-dialog
-          v-model="dialog.visible"
-          :title="dialog.title"
-          width="500px"
-          @close="handleCloseDialog"
-          :close-on-click-modal="false"
-        >
-          <el-form
-            ref="dataFormRef"
-            :model="formData"
-            :rules="computedRules"
-            label-width="auto"
-          >
+        <el-dialog v-model="dialog.visible" :title="dialog.title" width="500px" @close="handleCloseDialog"
+          :close-on-click-modal="false">
+          <el-form ref="dataFormRef" :model="formData" :rules="computedRules" label-width="auto">
             <el-form-item label="编码" prop="code">
               <el-input v-model="formData.code" placeholder="请输入编码" />
             </el-form-item>
@@ -90,38 +45,24 @@
             </el-form-item>
 
             <el-form-item label="备注">
-              <el-input
-                v-model="formData.remark"
-                type="textarea"
-                placeholder="请输入备注"
-              />
+              <el-input v-model="formData.remark" type="textarea" placeholder="请输入备注" />
             </el-form-item>
           </el-form>
 
           <template #footer>
             <div class="dialog-footer">
-              <el-button type="primary" @click="handleSubmitClick"
-                >确 定</el-button
-              >
+              <el-button type="primary" @click="handleSubmitClick">确 定</el-button>
               <el-button @click="handleCloseDialog">取 消</el-button>
             </div>
           </template>
         </el-dialog>
 
         <el-dialog v-model="dialog.treeVisible" title="编辑权限" width="500px">
-          <el-tree
-            show-checkbox
-            :data="menuTree"
-            :props="defaultProps"
-            node-key="code"
-            :default-checked-keys="defCheckedKeys"
-            @check="handleCheck"
-          />
+          <el-tree show-checkbox :data="menuTree" :props="defaultProps" node-key="code"
+            :default-checked-keys="defCheckedKeys" @check="handleCheck" />
           <template #footer>
             <div class="dialog-footer">
-              <el-button type="primary" @click="handleSaveMenuClick"
-                >确 定</el-button
-              >
+              <el-button type="primary" @click="handleSaveMenuClick">确 定</el-button>
               <el-button @click="handleCloseMenuDialog">取 消</el-button>
             </div>
           </template>

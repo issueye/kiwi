@@ -1,123 +1,42 @@
 <template>
   <base-page title="用户管理" desc="用户管理">
+    <template #actions>
+      <el-button type="success" icon="plus" @click="onAddClick">新增</el-button>
+    </template>
     <template #content>
       <div class="h-full flex flex-col p-2">
         <div class="search-bar">
           <el-form ref="queryFormRef" :model="queryParams" :inline="true">
             <el-form-item label="关键字" prop="keywords">
-              <el-input
-                v-model="queryParams.keywords"
-                placeholder="名称/编码"
-                clearable
-                @keyup.enter="handleQuery"
-              />
+              <el-input v-model="queryParams.keywords" placeholder="名称/编码" clearable @keyup.enter="onQuery" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" icon="search" @click="handleQuery"
-                >搜索</el-button
-              >
-              <el-button icon="refresh" @click="handleResetQuery"
-                >重置</el-button
-              >
+              <el-button type="primary" icon="search" @click="onQuery">搜索</el-button>
+              <el-button icon="refresh" @click="onResetQuery">重置</el-button>
             </el-form-item>
           </el-form>
         </div>
 
         <div class="grow flex flex-col">
-          <div class="mb-[10px]">
-            <el-button type="success" icon="plus" @click="handleAddClick"
-              >新增</el-button
-            >
-          </div>
-
           <div class="grow">
-            <d-table
-              :columns="columns"
-              :table-data="tableData"
-              :page-config="pageConfig"
-              usePagination
-              highlight-current-row
-              stripe
-              :loading="loading"
-              empty-text="暂无数据"
-            >
+            <d-table :columns="columns" :table-data="tableData" :page-config="pageConfig" usePagination
+              highlight-current-row stripe :loading="loading" empty-text="暂无数据">
               <template #role="{ scope }">
                 <el-tag size="small" effect="plain">
                   {{ getRoleName(scope.row.UserRole.role_code) }}
                 </el-tag>
               </template>
               <template #operation="{ scope }">
-                <el-button
-                  type="primary"
-                  link
-                  @click="handleEditClick(scope.row)"
-                  >编辑</el-button
-                >
+                <el-button type="primary" link @click="onEditClick(scope.row)">编辑</el-button>
                 <el-divider direction="vertical" />
-                <el-button
-                  type="danger"
-                  link
-                  @click="handleDeleteClick(scope.row)"
-                  >删除</el-button
-                >
+                <el-button type="danger" link @click="onDeleteClick(scope.row)">删除</el-button>
               </template>
             </d-table>
           </div>
         </div>
 
         <!--弹窗-->
-        <el-dialog
-          v-model="dialog.visible"
-          :title="dialog.title"
-          width="500px"
-          @close="handleCloseDialog"
-        >
-          <el-form
-            ref="dataFormRef"
-            :model="formData"
-            :rules="computedRules"
-            label-width="auto"
-          >
-            <el-form-item label="账户名" prop="username">
-              <el-input
-                v-model="formData.username"
-                placeholder="请输入账户名称"
-              />
-            </el-form-item>
-
-            <el-form-item label="昵称" prop="nick_name">
-              <el-input v-model="formData.nick_name" placeholder="请输入昵称" />
-            </el-form-item>
-
-            <el-form-item label="角色" prop="role_code">
-              <el-select v-model="formData.role_code" placeholder="请选择角色">
-                <el-option
-                  v-for="(item, index) in roleList"
-                  :key="index"
-                  :value="item.code"
-                  :label="item.name"
-                />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="备注">
-              <el-input
-                v-model="formData.remark"
-                type="textarea"
-                placeholder="请输入备注"
-              />
-            </el-form-item>
-          </el-form>
-
-          <template #footer>
-            <div class="dialog-footer">
-              <el-button type="primary" @click="handleSubmitClick"
-                >确 定</el-button
-              >
-              <el-button @click="handleCloseDialog">取 消</el-button>
-            </div>
-          </template>
-        </el-dialog>
+        <Dialog v-model:visible="dialog.visible" v-model:dialog="dialog" v-model:dataForm="formData" @close="onClose" />
       </div>
     </template>
   </base-page>
@@ -126,23 +45,24 @@
 <script setup>
 import {
   apiGetUserList,
-  apiAddUser,
-  apiUpdateUser,
   apiDeleteUser,
 } from "~/api/user";
-
-import { apiGetRoleList } from "~/api/role";
+import Dialog from './dialog.vue';
+import { storeToRefs } from 'pinia';
 
 import { ElMessageBox, ElMessage } from "element-plus";
 import { toast } from "~/composables/util";
 
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
+
+import { useSystemStore } from '~/store/system';
+
+const sysStore = useSystemStore()
+const { roleList } = storeToRefs(sysStore);
 
 const queryFormRef = ref();
-const dataFormRef = ref();
 
 const loading = ref(false);
-const operationType = ref(0); // 0:新增 1:编辑
 
 /**
  * 表格信息
@@ -174,8 +94,6 @@ const pageConfig = reactive({
  */
 const tableData = ref([]);
 
-const roleList = ref([]);
-
 /**
  * 查询条件
  */
@@ -186,14 +104,15 @@ const queryParams = reactive({
 const dialog = reactive({
   title: "",
   visible: false,
+  operationType: 0, // 0:新增 1:编辑
 });
 
 /**
  * 初始化数据
  */
 onMounted(() => {
-  handleQuery();
-  getRoleList();
+  onQuery();
+  sysStore.getRoleList();
 });
 
 /**
@@ -207,17 +126,6 @@ const formData = reactive({
   remark: "",
 });
 
-/**
- * 表单验证规则
- */
-const computedRules = computed(() => {
-  const rules = {
-    username: [{ required: true, message: "请输入账户名称", trigger: "blur" }],
-    nick_name: [{ required: true, message: "请输入昵称", trigger: "blur" }],
-  };
-  return rules;
-});
-
 const getRoleName = (code) => {
   const role = roleList.value.find((item) => item.code === code);
   return role ? role.name : "";
@@ -226,7 +134,7 @@ const getRoleName = (code) => {
 /**
  * 查询数据
  */
-const handleQuery = () => {
+const onQuery = () => {
   getData();
 };
 
@@ -249,42 +157,41 @@ const getData = async () => {
   }
 };
 
-/**
- *
- */
-const getRoleList = async () => {
-  const data = await apiGetRoleList();
-  roleList.value = data.list;
-};
+const onClose = () => {
+  dialog.visible = false;
+  getData();
+}
 
 /**
  * 重置查询
  */
-const handleResetQuery = () => {
+const onResetQuery = () => {
   queryFormRef.value.resetFields();
   queryParams.pageNum = 1;
-  handleQuery();
+  getData();
 };
 
 /**
  * 新增
  */
-const handleAddClick = () => {
-  dialog.visible = true;
-  dialog.title = "新增用户";
-  operationType.value = 0;
+const onAddClick = () => {
   resetValue();
+  dialog.title = "新增用户";
+  dialog.operationType = 0;
+  dialog.visible = true;
+  console.log('dialog', dialog);
 };
 
 /**
  * 编辑
  * @param value 信息
  */
-const handleEditClick = (value) => {
-  dialog.visible = true;
+const onEditClick = (value) => {
   dialog.title = "修改用户";
-  operationType.value = 1;
+  dialog.operationType = 1;
   setValue(value);
+  dialog.visible = true;
+  console.log('dialog', dialog);
 };
 
 /**
@@ -310,83 +217,21 @@ const resetValue = () => {
   formData.role_code = "";
 };
 
-/**
- * 提交表单按钮
- */
-const handleSubmitClick = () => {
-  dataFormRef.value.validate(async (isValid) => {
-    if (isValid) {
-      loading.value = true;
-      switch (operationType.value) {
-        case 0:
-          await addData();
-          break;
-        case 1:
-          await editData();
-          break;
-      }
-      loading.value = false;
-    }
-  });
-};
-
-/**
- * 新增数据
- */
-const addData = async () => {
-  try {
-    loading.value = true;
-    await apiAddUser(formData);
-    loading.value = false;
-    dialog.visible = false;
-    toast("添加用户成功");
-    handleQuery();
-  } catch (error) {
-    loading.value = false;
-  }
-};
-
-/**
- * 修改数据
- */
-const editData = async () => {
-  try {
-    loading.value = true;
-    await apiUpdateUser(formData);
-    loading.value = false;
-    dialog.visible = false;
-    toast("修改用户成功");
-    handleQuery();
-  } catch (error) {
-    loading.value = false;
-  }
-};
-
-// 关闭弹窗
-const handleCloseDialog = () => {
-  dialog.visible = false;
-
-  dataFormRef.value.resetFields();
-  dataFormRef.value.clearValidate();
-
-  formData.id = undefined;
-};
 
 /**
  * 删除数据
  * @param value 信息
  */
-const handleDeleteClick = (value) => {
+const onDeleteClick = (value) => {
   ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   }).then(
     async () => {
-      const data = await apiDeleteUser(value.id);
-      // console.log("data", data);
+      await apiDeleteUser(value.id);
       toast("删除用户成功");
-      handleQuery();
+      getData();
     },
     () => {
       ElMessage.info("已取消删除");

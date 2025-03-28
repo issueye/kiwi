@@ -5,7 +5,12 @@
         <h2 class="text-xl font-bold mr-2">{{ props.title }}</h2>
         <p class="text-gray-300">{{ props.desc }}</p>
       </div>
-      <slot name="actions"></slot>
+      
+
+      <div v-if="actionsSlot" style="margin-right: 5px;">
+        <slot name="actions"></slot>
+      </div>
+      <slot v-else name="actions"></slot>
     </div>
     <div class=" bg-white" :style="{ height: 'calc(100% - 46px)', padding: props.padding, borderTop: '1px solid #e9e9e9' }">
       <slot name="content"></slot>
@@ -13,6 +18,7 @@
   </div>
 </template>
 <script setup>
+import { useSlots } from 'vue';
 const props = defineProps({
   title: {
     type: String,
@@ -29,4 +35,6 @@ const props = defineProps({
     default: "20px",
   },
 });
+
+const actionsSlot = useSlots().actions;
 </script>

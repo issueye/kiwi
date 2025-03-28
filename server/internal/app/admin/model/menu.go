@@ -5,7 +5,7 @@ import "kiwi/internal/common/model"
 type Menu struct {
 	model.BaseModel
 	MenuBase
-	IsHave   bool    `gorm:"column:is_have;comment:是否可见;" json:"is_have"` // 是否有权限
+	IsHave   bool    `gorm:"column:is_have;<-:false;-:migration;comment:是否可见;" json:"is_have"` // 是否有权限
 	Children []*Menu `gorm:"-" json:"child"`
 }
 

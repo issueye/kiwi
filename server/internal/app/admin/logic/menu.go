@@ -93,8 +93,8 @@ func DeleteMenu(id uint) error {
 	return service.NewMenu().Delete(id)
 }
 
-func GetMenuTree(Role_code string) ([]*model.Menu, error) {
-	list, err := service.NewRole().GetRoleMenus(Role_code)
+func GetMenuTree(Role_code string, isHave int) ([]*model.Menu, error) {
+	list, err := service.NewRole().GetRoleMenus(Role_code, isHave)
 	if err != nil {
 		return nil, err
 	}

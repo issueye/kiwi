@@ -19,6 +19,7 @@ func UpdateUser(u *model.User) error {
 	data["username"] = u.Username
 	data["nick_name"] = u.NickName
 	data["avatar"] = u.Avatar
+	data["remark"] = u.Remark
 
 	return service.NewUser().UpdateByMap(u.ID, data)
 }
@@ -60,6 +61,7 @@ func UpdateUserInfo(u *requests.UpdateUser) error {
 	data["username"] = u.Username
 	data["nick_name"] = u.NickName
 	data["avatar"] = u.Avatar
+	data["remark"] = u.Remark
 
 	return service.NewUser().UpdateByMap(uint(u.Id), data)
 }

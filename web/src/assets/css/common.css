@@ -146,3 +146,8 @@ body {
 .el-tag {
     border-radius: var(--el-border-radius-base);
 }
+
+/* 表格 */
+.el-table__header th {
+    background-color: #F3F3F3 !important;
+}

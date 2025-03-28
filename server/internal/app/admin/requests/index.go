@@ -32,6 +32,7 @@ type UpdateUser struct {
 	Username string `json:"username" binding:"required"`
 	NickName string `json:"nick_name"  binding:"required"`
 	Avatar   string `json:"avatar"`
+	Remark   string `json:"remark"`
 }
 
 func NewUpdateUser() *UpdateUser {

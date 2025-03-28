@@ -3,7 +3,6 @@ package route
 import (
 	adminRouter "kiwi/internal/app/admin/router"
 	projectRouter "kiwi/internal/app/project/router"
-	"kiwi/internal/app/websocket"
 	"kiwi/internal/common/config"
 	"kiwi/internal/common/controller"
 	"log/slog"
@@ -37,9 +36,6 @@ func InitRouter(r *gin.Engine) {
 		// 注册项目管理路由
 		projectRouter.Register(v1)
 	}
-
-	// websocket
-	r.GET("/ws_compile", websocket.GetWebSocketManager().HandleWebSocket)
 
 	r.NoRoute(func(ctx *gin.Context) {
 		slog.Error("404", zap.String("path", ctx.Request.URL.Path), zap.String("method", ctx.Request.Method))

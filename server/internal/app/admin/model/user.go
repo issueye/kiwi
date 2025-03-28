@@ -8,7 +8,6 @@ type User struct {
 	Password string `gorm:"column:password;size:255;not null;comment:用户密码，以加密形式存储;" json:"password"`
 	NickName string `gorm:"column:nick_name;size:50;not null;comment:用户昵称，用于显示在页面上，可修改;" json:"nick_name"`
 	Avatar   string `gorm:"column:avatar;size:255;not null;comment:用户头像，用于显示在页面上，可修改;" json:"avatar"`
-	Remark   string `gorm:"column:remark;size:255;not null;comment:用户备注，用于描述用户;" json:"remark"`
 	// 一个操作员只能有一个角色
 	UserRole *UserRole `gorm:"foreignKey:user_id"`
 }

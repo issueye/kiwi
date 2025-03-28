@@ -4,11 +4,8 @@
     :style="{ height: global.CARAMBOLA_HEADER_HEIGHT }"
   >
     <span
-      class="w-[250px] flex justify-center items-center text-xl font-thin text-white"
+      class="w-[250px] ml-2 flex justify-start items-center text-xl font-thin text-white"
     >
-      <!-- <el-icon class="mr-1">
-        <component :is="global.APP_ICON"></component>
-      </el-icon> -->
       <el-image :src="LogoImage" class="mr-2 w-8" />
       <span class="font-semibold subpixel-antialiased tracking-widest"
         >{{ global.APP_NAME }}
